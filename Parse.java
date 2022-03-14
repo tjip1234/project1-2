@@ -9,7 +9,7 @@ import java.io.Writer;
 public class Parse {
 
     public static void main(String[] args) throws FileNotFoundException{
-        String h = "(7 + * 8)sin(x)/cos(y) + 7";
+        String h = "(7 * 8)sin(x)/cos(y) + 7";
         Parser(h);
     }
 
@@ -17,7 +17,7 @@ public class Parse {
         PrintWriter writer = new PrintWriter("mathFunction.java");
         writer.write("public class mathFunction {");
         writer.println();
-        writer.write("public double Function(double x, double y){");
+        writer.write("public static double Function(double x, double y){");
         writer.println();
         String mathLine = "";
         while (!s.isEmpty()) {
@@ -44,6 +44,10 @@ public class Parse {
                 mathLine += "Math.log";
                 s = s.replaceFirst(s.substring(0, 3), "");
                     break;
+                case 'a':
+                    mathLine += "Math.abs";
+                    s = s.replaceFirst(s.substring(0, 3), "");
+                        break;
                 default:
                     mathLine += s.charAt(0);
                     s = s.substring(1);
