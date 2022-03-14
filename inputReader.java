@@ -16,7 +16,7 @@ public class inputReader{
     public static void main(String[] args) {
 
             //in the folllowing lines all the variables will be filled with the correspondant array values
-            getValues("/*add your file here");
+            getValues("/Users/edoardopiazza/Downloads/example_inputfile.txt");
             x0=(Double.parseDouble(array[0]));
             y0=(Double.parseDouble(array[1]));
             xt=(Double.parseDouble(array[2]));
@@ -30,8 +30,6 @@ public class inputReader{
             sandPitY=array[9];
             heightProfile=array[7];
 
-
-        
     }
     public static String[] getValues(String file) {
         
