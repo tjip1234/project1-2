@@ -1,8 +1,10 @@
 public class Main {
+    
     public static void main(String[] args) {
-        System.out.println(PhysicsEngine.derivativeCalculator(5,7));
-        System.out.println(PhysicsEngine.beginXCalculator(5,7,20,15,1,0.5));
-        System.out.println(PhysicsEngine.beginYCalculator(5,7,20,15,1,0.5));
+        PhysicsEngine.EulersMethod(0.01, 1, 1, 15, 10, 1, 0.1);
+
+    }
+    public static void recursiveEulers(double x, double y){
 
     }
     

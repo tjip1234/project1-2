@@ -2,13 +2,32 @@ public class PhysicsEngine{
 
 
     public static double gravity = 9.81;
+    public static double StaticFriction = 0.2;
     public static double nextX;
     public static double nextY;
+    public static int count = 0;
+    public static double epsilon = 0.1;
 
-    public static double EulersMethod(double stepsize, double X, double Y){
-        double nextX = (X + stepsize);
-        double nextY = (Y + stepsize*derivativeCalculator(Y, X));
-        return 1;
+    public static void EulersMethod(double stepsize, double X, double Y, double velocityX, double velocityY, double mass, double friction){
+
+        double x = X;
+        double y = Y;
+        double vx = velocityX;
+        double vy = velocityY;
+        X += stepsize *velocityX;
+        Y += stepsize *velocityY;
+        velocityX += stepsize * beginXCalculator(x,y,vx,vy,mass,friction );
+        velocityY += stepsize * beginYCalculator(x,y,vx,vy,mass,friction );
+        System.out.println(X + " " + Y + " " + velocityX + " " + velocityY );
+        if (((vy*velocityY < 0)&& velocityX < 0.1)||((vx*velocityX < 0)&& velocityY < 0.1)) {
+            X = (x+X)/2;
+            Y = (y+Y)/2;
+            System.out.println(X + " " + Y );
+            return;
+            //if (StaticFriction > Math.sqrt(Math.pow(derivativeCalculator(x,y), 2) + Math.pow(derivativeCalculator(y,x), 2))) {}
+        }
+
+        EulersMethod(stepsize, X,Y,velocityX,velocityY,mass,friction);
     }
     /**
      * 
@@ -20,20 +39,31 @@ public class PhysicsEngine{
      * @param friction friction coefficient
      * @return
      */
+public static boolean Stop(double X, double Y, double staticfriction){
+    if(Math.pow(derivativeCalculator(X,Y), 2) <= 1&& Math.pow(derivativeCalculator(Y,X), 2) <= 1){ // range
+        return true;
+    }
+    else if(Math.pow(derivativeCalculator(X,Y), 2) <= 1 || Math.pow(derivativeCalculator(Y,X), 2) <= 1){ 
+        if(staticfriction > Math.sqrt(Math.pow(derivativeCalculator(X,Y), 2) + Math.pow(derivativeCalculator(Y,X), 2))){
+            return true;
+        }
+    }
+    return false;
+}
     public static double beginXCalculator(double positionX, double positionY, double velocityX,  double velocityY ,double mass, double friction){
         double velocityThing = velocityX/Math.sqrt(Math.pow(velocityX, 2)+ Math.pow(velocityY, 2)+ Math.pow(((derivativeCalculator(positionX,positionY)*velocityX)+(derivativeCalculator(positionY,positionX)*velocityY)),2));
         double frictionThing = (friction*mass*gravity)/(Math.sqrt(1+Math.pow(derivativeCalculator(positionX,positionY), 2)+ Math.pow(derivativeCalculator(positionY,positionX), 2)));
         double gravityThing = (mass*gravity*derivativeCalculator(positionX,positionY))/(1+Math.pow(derivativeCalculator(positionX,positionY), 2)+ Math.pow(derivativeCalculator(positionY,positionX), 2));
-        System.out.println(frictionThing);
-        System.out.println(gravityThing);
+        //System.out.println(frictionThing);
+       // System.out.println(gravityThing);
         return -gravityThing-(velocityThing*frictionThing);
     }
     public static double beginYCalculator(double positionX, double positionY, double velocityX,  double velocityY ,double mass, double friction){
         double velocityThing = velocityY/Math.sqrt(Math.pow(velocityX, 2)+ Math.pow(velocityY, 2)+ Math.pow(((derivativeCalculator(positionX,positionY)*velocityX)+(derivativeCalculator(positionY,positionX)*velocityY)),2));
         double frictionThing = (friction*mass*gravity)/(Math.sqrt(1+Math.pow(derivativeCalculator(positionX,positionY), 2)+ Math.pow(derivativeCalculator(positionY,positionX), 2)));
         double gravityThing = (mass*gravity*derivativeCalculator(positionY,positionX))/(1+Math.pow(derivativeCalculator(positionX,positionY), 2)+ Math.pow(derivativeCalculator(positionY,positionX), 2));
-        System.out.println(frictionThing);
-        System.out.println(gravityThing);
+        //System.out.println(frictionThing);
+        //System.out.println(gravityThing);
         return -gravityThing-(velocityThing*frictionThing);
     }
     /**

@@ -1,4 +1,4 @@
 public class mathFunction {
 public static double Function(double x, double y){
-return 7 + Math.sin(x)/Math.cos(y) + 7;
+return 0.5*(Math.sin((x-y)/7)+0.9);
 }}
