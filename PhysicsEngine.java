@@ -2,7 +2,7 @@ import org.mariuszgromada.math.mxparser.*;
 
 class PhysicsEngine{
 
-    
+        public static double temp = 2.5;
         public static double gravity = 9.81;
         public static double StaticFriction = 0.2;
         public static double nextX;
@@ -45,7 +45,7 @@ class PhysicsEngine{
 
 
         public static void RKuttaMethod(double stepsize, double X, double Y, double velocityX, double velocityY, double mass, double friction){
-    
+            
             double x = X;
             double y = Y;
             double vx = velocityX;
