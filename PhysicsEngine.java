@@ -1,8 +1,8 @@
+import org.mariuszgromada.math.mxparser.*;
+
 class PhysicsEngine{
 
     
-
-
         public static double gravity = 9.81;
         public static double StaticFriction = 0.2;
         public static double nextX;
