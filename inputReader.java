@@ -12,6 +12,7 @@ public class inputReader{
     static String[] array; //this is the returned array with all the values in their positions
     static double x0, y0, xt, yt, r, muk, mus, mukS, musS;
     static String sandPitX, sandPitY, heightProfile;
+    static Tree tree1;
 
     public static void initValues(String name){
         getValues(name);
@@ -24,6 +25,7 @@ public class inputReader{
         mus=(Double.parseDouble(array[6]));
         mukS=(Double.parseDouble(array[10]));
         musS=(Double.parseDouble(array[11]));
+        tree1 = new Tree(Double.parseDouble(array[12]), Double.parseDouble(array[13]), Double.parseDouble(array[14]));
         sandPitX=array[8];
         sandPitY=array[9];
         heightProfile=array[7];

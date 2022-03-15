@@ -24,7 +24,7 @@ public class Parse {
             switch (s.charAt(0)) {
                 case 's':
                     if (s.substring(0, 3).equals("sin")) {
-                        mathLine += "Math.sin";
+                    mathLine += "Math.sin";
                         s = s.replaceFirst(s.substring(0, 3), "");
                         break;  
                     }
@@ -55,6 +55,17 @@ public class Parse {
             }
         }
         writer.write("return " + mathLine + ";");
+        writer.println();
+        writer.write("}");
+        writer.write("public static boolean CheckSand(double x, double y){");
+        writer.println();
+        writer.write("if ("+inputReader.sandPitX.substring(0, inputReader.sandPitX.indexOf('x')+1) +"&&"+inputReader.sandPitX.substring(inputReader.sandPitX.indexOf('x'),inputReader.sandPitX.length() )+"&&"+inputReader.sandPitY.substring(0, inputReader.sandPitY.indexOf('y')+1) +"&&"+inputReader.sandPitY.substring(inputReader.sandPitY.indexOf('y'),inputReader.sandPitY.length())+"){");
+        writer.println();
+        writer.write("return true;");
+        writer.println();
+        writer.write("}");
+        writer.println();
+        writer.write("return false;");
         writer.println();
         writer.write("}}");
         writer.close();
