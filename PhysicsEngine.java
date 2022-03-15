@@ -1,4 +1,5 @@
 import java.math.BigDecimal;
+import org.mariuszgromada.math.mxparser.*;
 class PhysicsEngine{
 
         public static double gravity = 9.81;
@@ -7,7 +8,7 @@ class PhysicsEngine{
         public static double nextY;
         public static int count = 0;
         public static double epsilon = 0.1;
-        public static double epsilon2 = 0.15;
+        public static double epsilon2 = 0.015;
         
         public static void EulersMethod(double stepsize, double X, double Y, double velocityX, double velocityY, double mass, double friction){
 
@@ -75,7 +76,7 @@ class PhysicsEngine{
             double y = Y;
             double vx = velocityX;
             double vy = velocityY;
-            double k1 = stepsize* beginYCalculator(X, Y, velocityX, velocityY, mass, friction);
+            //double k1 = stepsize* beginYCalculator(X, Y, velocityX, velocityY, mass, friction);
             X += stepsize *velocityX;
             Y += stepsize *velocityY;
             velocityX += stepsize * beginXCalculator(x,y,vx,vy,mass,friction );
@@ -127,11 +128,11 @@ class PhysicsEngine{
 
 
     public static boolean StopComplete(double X, double Y, double staticfriction){
-        if((derivativeCalculator(X,Y) ==  0) && (derivativeCalculator(Y,X) == 0) || (Math.abs(derivativeCalculator(X, Y))  - epsilon < 0) && (Math.abs(derivativeCalculator(Y, X)) - epsilon < 0 )){ // range
+        if((derivativeOf(X,Y,inputReader.heightProfile,'x') ==  0) && (derivativeOf(X,Y,inputReader.heightProfile,'y') == 0) || (Math.abs(derivativeCalculator(X, Y))  - epsilon < 0) && (Math.abs(derivativeCalculator(Y, X)) - epsilon < 0 )){ // range
             return true;
         }
-        else if(derivativeCalculator(X,Y) == 0 || derivativeCalculator(Y,X) == 0 || (Math.abs(derivativeCalculator(X, Y))  - epsilon < 0) || (Math.abs(derivativeCalculator(Y, X)) - epsilon < 0 )){ 
-            if(staticfriction > Math.sqrt(Math.pow(derivativeCalculator(X,Y), 2) + Math.pow(derivativeCalculator(Y,X), 2))){
+        else if(derivativeOf(X,Y,inputReader.heightProfile,'x') == 0 || derivativeOf(X,Y,inputReader.heightProfile,'y') == 0 || (Math.abs(derivativeCalculator(X, Y))  - epsilon < 0) || (Math.abs(derivativeCalculator(Y, X)) - epsilon < 0 )){ 
+            if(staticfriction > Math.sqrt(Math.pow(derivativeOf(X,Y,inputReader.heightProfile,'x'), 2) + Math.pow(derivativeOf(X,Y,inputReader.heightProfile,'y'), 2))){
                 return true;
             }
         }
@@ -139,16 +140,29 @@ class PhysicsEngine{
     }
         public static double beginXCalculator(double positionX, double positionY, double velocityX,  double velocityY ,double mass, double friction){
 
-            double xThing = (-gravity*derivativeCalculator(positionX, positionY)) - (friction*gravity*velocityX)/(Math.sqrt(Math.pow(velocityX, 2) + Math.pow(velocityY, 2)));
+            double xThing = (-gravity*derivativeOf(positionX,positionY,inputReader.heightProfile,'x')) - (friction*gravity*velocityX)/(Math.sqrt(Math.pow(velocityX, 2) + Math.pow(velocityY, 2)));
             return xThing;
         }
 
         public static double beginYCalculator(double positionX, double positionY, double velocityX,  double velocityY ,double mass, double friction){
 
-            double yThing = (-gravity*derivativeCalculator(positionY, positionX)) - (friction*gravity*velocityY)/(Math.sqrt(Math.pow(velocityX, 2) + Math.pow(velocityY, 2)));
+            double yThing = (-gravity*derivativeOf(positionX,positionY,inputReader.heightProfile,'y')) - (friction*gravity*velocityY)/(Math.sqrt(Math.pow(velocityX, 2) + Math.pow(velocityY, 2)));
             return yThing;
         }
 
+        public static double derivativeOf(double X, double Y, String function, char withrespectto){
+            Argument x1 = new Argument("x = "+X);
+            Argument y1 = new Argument("y = "+Y);
+            if (withrespectto == 'y') {
+                Expression e1 = new Expression("der("+function+", y)", x1, y1);
+                double calc = e1.calculate();
+                return calc;
+            }
+            Expression e1 = new Expression("der("+function+", x)", x1, y1);
+            double calc = e1.calculate();
+            return calc;
+        }
+        
         /**
          * first param will determine 
          * @param X
