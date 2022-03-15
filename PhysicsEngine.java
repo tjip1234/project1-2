@@ -50,7 +50,7 @@ public static boolean Stop(double X, double Y, double staticfriction){
     }
     return false;
 }
-    public static double beginXCalculator(double positionX, double positionY, double velocityX,  double velocityY ,double mass, double friction){
+    public static double Phase3XCalculator(double positionX, double positionY, double velocityX,  double velocityY ,double mass, double friction){
         double velocityThing = velocityX/Math.sqrt(Math.pow(velocityX, 2)+ Math.pow(velocityY, 2)+ Math.pow(((derivativeCalculator(positionX,positionY)*velocityX)+(derivativeCalculator(positionY,positionX)*velocityY)),2));
         double frictionThing = (friction*mass*gravity)/(Math.sqrt(1+Math.pow(derivativeCalculator(positionX,positionY), 2)+ Math.pow(derivativeCalculator(positionY,positionX), 2)));
         double gravityThing = (mass*gravity*derivativeCalculator(positionX,positionY))/(1+Math.pow(derivativeCalculator(positionX,positionY), 2)+ Math.pow(derivativeCalculator(positionY,positionX), 2));
@@ -58,7 +58,7 @@ public static boolean Stop(double X, double Y, double staticfriction){
        // System.out.println(gravityThing);
         return -gravityThing-(velocityThing*frictionThing);
     }
-    public static double beginYCalculator(double positionX, double positionY, double velocityX,  double velocityY ,double mass, double friction){
+    public static double Phase3YCalculator(double positionX, double positionY, double velocityX,  double velocityY ,double mass, double friction){
         double velocityThing = velocityY/Math.sqrt(Math.pow(velocityX, 2)+ Math.pow(velocityY, 2)+ Math.pow(((derivativeCalculator(positionX,positionY)*velocityX)+(derivativeCalculator(positionY,positionX)*velocityY)),2));
         double frictionThing = (friction*mass*gravity)/(Math.sqrt(1+Math.pow(derivativeCalculator(positionX,positionY), 2)+ Math.pow(derivativeCalculator(positionY,positionX), 2)));
         double gravityThing = (mass*gravity*derivativeCalculator(positionY,positionX))/(1+Math.pow(derivativeCalculator(positionX,positionY), 2)+ Math.pow(derivativeCalculator(positionY,positionX), 2));

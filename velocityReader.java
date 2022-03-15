@@ -19,7 +19,7 @@ public class velocityReader{
     public static void main(String[] args) {
 
             //in the folllowing lines all the variables will be filled with the correspondant array values
-            getValues("/Users/edoardopiazza/Desktop/trials.txt");
+            getValues("trials.txt");
 
 
     }
