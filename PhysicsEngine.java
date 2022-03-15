@@ -1,7 +1,5 @@
+import java.math.BigDecimal;
 class PhysicsEngine{
-
-    
-
 
         public static double gravity = 9.81;
         public static double StaticFriction = 0.2;
@@ -9,29 +7,56 @@ class PhysicsEngine{
         public static double nextY;
         public static int count = 0;
         public static double epsilon = 0.1;
-        public static double epsilon2 = 0.01;
+        public static double epsilon2 = 0.15;
+        
         public static void EulersMethod(double stepsize, double X, double Y, double velocityX, double velocityY, double mass, double friction){
-            
+
             double x = X;
             double y = Y;
             double vx = velocityX;
             double vy = velocityY;
+            
             X += stepsize *velocityX;
             Y += stepsize *velocityY;
             velocityX += stepsize * beginXCalculator(x,y,vx,vy,mass,friction );
             velocityY += stepsize * beginYCalculator(x,y,vx,vy,mass,friction );
             System.out.println(derivativeCalculator(X, Y));
             System.out.println(X + " " + Y + " " + velocityX + " " + velocityY );
+
             if (Stop(velocityX, velocityY)) {
                 if (StopComplete(X, Y, StaticFriction)) {
                     X = (x+X)/2;
                     Y = (y+Y)/2;
+                    System.out.println(X + " " + Y + " " + velocityX + " " + velocityY );
                     return;
                 }
             }
     
             EulersMethod(stepsize, X,Y,velocityX,velocityY,mass,friction);
         }
+        public static void SemiImplicitEulerMethod(double stepsize, double X, double Y, double velocityX, double velocityY, double mass, double friction){
+            
+            double x = X;
+            double y = Y;
+            double vx = velocityX;
+            double vy = velocityY;
+            velocityX += stepsize * beginXCalculator(x,y,vx,vy,mass,friction );
+            velocityY += stepsize * beginYCalculator(x,y,vx,vy,mass,friction );
+            X += stepsize *velocityX;
+            Y += stepsize *velocityY;
+            System.out.println(derivativeCalculator(X, Y));
+            System.out.println(X + " " + Y + " " + velocityX + " " + velocityY );
+            if (Stop(velocityX, velocityY)) {
+                if (StopComplete(X, Y, StaticFriction)) {
+                    X = (x+X)/2;
+                    Y = (y+Y)/2;
+                    System.out.println(X + " " + Y + " " + velocityX + " " + velocityY );
+                    return;
+                }
+            }
+            SemiImplicitEulerMethod(stepsize, X,Y,velocityX,velocityY,mass,friction);
+        }
+
         /**
          * 
          * @param positionX position of the ball
@@ -131,9 +156,11 @@ class PhysicsEngine{
          * @return
          */
         public static double derivativeCalculator(double X, double Y){
-            double first = mathFunction.Function(X,Y);
-            double second = mathFunction.Function(X+0.00000001,Y);
-            return (second - first)/0.00000001;
+            BigDecimal first = BigDecimal.valueOf(mathFunction.Function(X,Y));
+            BigDecimal second = BigDecimal.valueOf(mathFunction.Function(X+0.00000000000000001,Y));
+            BigDecimal devision = BigDecimal.valueOf((0.00000000000000001));
+            BigDecimal third = (second.subtract(first)).divide(devision);
+            return third.longValueExact();
         }
     
         public static double derivativeX(String pTerm, int val){

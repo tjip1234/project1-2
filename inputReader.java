@@ -13,23 +13,20 @@ public class inputReader{
     static double x0, y0, xt, yt, r, muk, mus, mukS, musS;
     static String sandPitX, sandPitY, heightProfile;
 
-    public static void main(String[] args) {
-
-            //in the folllowing lines all the variables will be filled with the correspondant array values
-            getValues("example_inputfile.txt");
-            x0=(Double.parseDouble(array[0]));
-            y0=(Double.parseDouble(array[1]));
-            xt=(Double.parseDouble(array[2]));
-            yt=(Double.parseDouble(array[3]));
-            r=(Double.parseDouble(array[4]));
-            muk=(Double.parseDouble(array[5]));
-            mus=(Double.parseDouble(array[6]));
-            mukS=(Double.parseDouble(array[10]));
-            musS=(Double.parseDouble(array[11]));
-            sandPitX=array[8];
-            sandPitY=array[9];
-            heightProfile=array[7];
-
+    public static void initValues(String name){
+        getValues(name);
+        x0=(Double.parseDouble(array[0]));
+        y0=(Double.parseDouble(array[1]));
+        xt=(Double.parseDouble(array[2]));
+        yt=(Double.parseDouble(array[3]));
+        r=(Double.parseDouble(array[4]));
+        muk=(Double.parseDouble(array[5]));
+        mus=(Double.parseDouble(array[6]));
+        mukS=(Double.parseDouble(array[10]));
+        musS=(Double.parseDouble(array[11]));
+        sandPitX=array[8];
+        sandPitY=array[9];
+        heightProfile=array[7];
     }
     public static String[] getValues(String file) {
         
