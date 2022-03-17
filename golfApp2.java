@@ -24,6 +24,8 @@ public class golfApp2 implements ActionListener
     public static Line2D.Double line = new Line2D.Double(p,p2);
     Icon hit = new ImageIcon("res/button.png");
     Icon stop = new ImageIcon("res/stop.png");
+    Icon file = new ImageIcon("res/stop.png");
+    Image flag = Toolkit.getDefaultToolkit().getImage("res/golf_flag.png");
     Image east = Toolkit.getDefaultToolkit().getImage("res/East.png");
     Image ball = Toolkit.getDefaultToolkit().getImage("res/golfball.png");
     Image compass = Toolkit.getDefaultToolkit().getImage("res/compass.png");
@@ -37,6 +39,7 @@ public class golfApp2 implements ActionListener
     JSlider slider_direction = new JSlider(0, 360, 0);
     JButton hitButton = new JButton(hit);
     JButton stopButton = new JButton(stop);
+    JButton hitFromFile = new JButton(file);
     JLabel buttonname = new JLabel("HIT");
     JLabel stopname = new JLabel("STOP");
     JLabel strength = new JLabel("Strength: ");
@@ -46,8 +49,10 @@ public class golfApp2 implements ActionListener
     JLabel complable = new JLabel(new ImageIcon(compass));
     JLabel fieldy = new JLabel(new ImageIcon(field));
     JLabel eastarrow = new JLabel(new ImageIcon(east));
+    JLabel flagend = new JLabel(new ImageIcon(flag));
     Border border = BorderFactory.createLineBorder(new Color(0,0,0), 4);
     Border porder = BorderFactory.createLineBorder(new Color(0,0,0), 1); 
+    static Object LOCK3 = new Object();
     public int a;
     public int b;
     Double HitStrength = 0.0;
@@ -59,15 +64,15 @@ public class golfApp2 implements ActionListener
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(true);
         frame.getContentPane().setBackground(new Color(50,50,50));
-        frame.setBounds(300,200,680,ImageFile.height+130);
+        frame.setBounds(300,200,750+(ImageFile.width-750),ImageFile.height+130);
         
         //Label
-        complable.setBounds(610, ImageFile.height-70, 60, 60);
+        complable.setBounds(680+(ImageFile.width-750), ImageFile.height-70, 60, 60);
 
         //Panel_1
         panel_1.setLayout( null ); 
         //panel_1.setBackground(new Color(126,150,50));
-        panel_1.setBounds(0,0,680,ImageFile.height);
+        panel_1.setBounds(0,0,750+(ImageFile.width-750),ImageFile.height);
         panel_1.setBorder(porder);
         //panel_1.add(ballable);
         //panel_1.add(complable);
@@ -75,7 +80,7 @@ public class golfApp2 implements ActionListener
         //Panel_2
         panel_2.setLayout( null );
         panel_2.setBackground(new Color(220,217,217));
-        panel_2.setBounds(0,ImageFile.height,680,130);
+        panel_2.setBounds(0,ImageFile.height,750+(ImageFile.width-750),130);
         panel_2.setBorder(porder);
 
         //Slider_1
@@ -191,7 +196,45 @@ public class golfApp2 implements ActionListener
         );
         stopButton.addActionListener(this);
         stopButton.setBounds(592, 6, 60, 60);
+        
+        hitFromFile.setBorder(border);
+        hitFromFile.setBackground(new Color(200,200,200));
+        hitFromFile.setOpaque(true);
+        hitFromFile.addMouseListener(
+            new MouseListener(){
+                @Override
+                public void mouseClicked(MouseEvent e) 
+                {
+                    hitFromFile.setBorder(BorderFactory.createLineBorder(new Color(192,30,37),6));
+                }
 
+                @Override
+                public void mousePressed(MouseEvent e) 
+                {
+                    hitFromFile.setBorder(BorderFactory.createLineBorder(new Color(192,30,37),6));
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) 
+                {
+                    hitFromFile.setBorder(BorderFactory.createLineBorder(new Color(192,30,37),6));
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) 
+                {
+                    hitFromFile.setBorder(BorderFactory.createLineBorder(new Color(192,30,37),6));
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) 
+                {
+                    hitFromFile.setBorder(BorderFactory.createLineBorder(new Color(0,0,0),4));
+                } 
+            }
+        );
+        hitFromFile.addActionListener(this);
+        hitFromFile.setBounds(660, 6, 60, 60);
         //Arrows
         eastarrow.setBounds(50, 50, 300, 300);
         
@@ -212,8 +255,8 @@ public class golfApp2 implements ActionListener
             public void stateChanged(ChangeEvent e) 
             {
                 drc_control=((JSlider)e.getSource()).getValue();
-                Main.xV = Math.cos(drc_control * 3.6 * (Math.PI/180))*HitStrength;
-                Main.yV = Math.sin(drc_control * 3.6 * (Math.PI/180))*HitStrength;
+                Main.xV = Math.cos(drc_control  * (Math.PI/180))*HitStrength;
+                Main.yV = Math.sin(drc_control * (Math.PI/180))*HitStrength;
             }
         });
 
@@ -243,19 +286,21 @@ public class golfApp2 implements ActionListener
         eastarr.setBounds(40, 40, 110, 100);
         
         //Label 
-        ballable.setBounds((int)(ImageFile.width/2 + Ball.X*100),(int)(ImageFile.height/2 + Ball.Y*100),50, 50);
+        ballable.setBounds((int)(ImageFile.width/2 + Ball.X*100),(int)(ImageFile.height/2 - Ball.Y*100),50, 50);
 
         slider_strength.setBounds(130, 4, 350, 50);
         slider_direction.setBounds(130, 47, 350, 50);
 
-        fieldy.setBounds(0, 0, 680, ImageFile.height);
-        
+        fieldy.setBounds(0, 0, 750+(ImageFile.width-750), ImageFile.height);
+        flagend.setBounds((int)(ImageFile.width/2 + inputReader.xt*100), (int)(ImageFile.height/2 - inputReader.yt*100), 60, 70);
+        panel_1.add(flagend);
         panel_1.add(ballable);
         panel_1.add(complable);
         panel_1.add(fieldy);
         panel_2.add(hitButton);
         panel_2.add(buttonname);
         panel_2.add(stopButton);
+        panel_2.add(hitFromFile);
         panel_2.add(stopname);
         panel_2.add(slider_strength);
         panel_2.add(slider_direction);
@@ -268,7 +313,7 @@ public class golfApp2 implements ActionListener
     }
 
     public void UpdateBall(int xPos, int yPos){
-        ballable.setBounds(ImageFile.width/2 + xPos, ImageFile.height/2 + yPos, 50, 50);
+        ballable.setBounds(ImageFile.width/2 + xPos, ImageFile.height/2 - yPos, 50, 50);
         System.out.println("update");
         frame.setVisible(true);
     }
@@ -281,6 +326,19 @@ public class golfApp2 implements ActionListener
         else if (e.getSource().equals(stopButton)) 
         {
             frame.dispose();
+        }
+        else if (e.getSource().equals(hitFromFile)) {
+            Main.c = Main.Velocities[0].length;
+            Main.unlock2();
+            
+
+            
+        }
+    }
+    public static void unlock(){
+        synchronized (LOCK3) {
+            
+            LOCK3.notifyAll();
         }
     }
 

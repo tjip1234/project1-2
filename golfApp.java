@@ -27,6 +27,7 @@ public class golfApp extends JFrame implements ActionListener
 {
     private JFrame frame;
     JButton startButton;
+    JButton configButton;
     public static golfApp2 golfing;
     Image img = Toolkit.getDefaultToolkit().getImage("res/golf.png");
     Image dcl = Toolkit.getDefaultToolkit().getImage("res/dcl.png");
@@ -42,6 +43,8 @@ public class golfApp extends JFrame implements ActionListener
         setResizable(true);
         startButton = new JButton("Start");
         startButton.setFont(new Font("Arial", Font.BOLD, 30));
+        configButton = new JButton("Config");
+        configButton.setFont(new Font("Arial", Font.BOLD, 30));
         // JLabel declaration = new JLabel("GOLF");
         // declaration.setFont(new Font("Arial", Font.BOLD, 30));
         Border border = BorderFactory.createLineBorder(new Color(0,0,0), 4);
@@ -94,8 +97,49 @@ public class golfApp extends JFrame implements ActionListener
                         } 
                     }
                 );
-                startButton.setBounds(80, 205, 120, 60);
+                startButton.setBounds(80, 190, 120, 60);
                 add(startButton);
+
+                
+                configButton.setBorder(border);
+                configButton.setBackground(new Color(140,199,62));
+                configButton.setOpaque(true);
+                configButton.addMouseListener
+                (
+                    new MouseListener()
+                    {
+                        @Override
+                        public void mouseClicked(MouseEvent e) 
+                        {
+                            configButton.setForeground(new Color(239,79,53));   
+                        }
+
+                        @Override
+                        public void mousePressed(MouseEvent e) 
+                        {
+                            configButton.setForeground(new Color(239,79,53));  
+                        }
+                        @Override
+                        public void mouseReleased(MouseEvent e) 
+                        {
+                            configButton.setForeground(new Color(239,79,53));    
+                        }
+
+                        @Override
+                        public void mouseEntered(MouseEvent e) 
+                        {
+                            configButton.setForeground(new Color(239,79,53)); 
+                        }
+
+                        @Override
+                        public void mouseExited(MouseEvent e) 
+                        {
+                            configButton.setForeground(new Color(0,0,0));  
+                        } 
+                    }
+                );
+                configButton.setBounds(80, 260, 120, 60);
+                add(configButton);
                
 
             }
@@ -108,6 +152,7 @@ public class golfApp extends JFrame implements ActionListener
 
 
         startButton.addActionListener(this);
+        configButton.addActionListener(this);
         setBounds(800,300,385,380);
         setVisible(true);
     }
@@ -115,14 +160,11 @@ public class golfApp extends JFrame implements ActionListener
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(startButton)) {
             this.dispose();
-            try {
-                Main.config();
-            } catch (FileNotFoundException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
             golfing = new golfApp2();
             
+        }
+        else if(e.getSource().equals(configButton)){
+            this.dispose();
         }
     }
 

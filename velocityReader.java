@@ -8,8 +8,8 @@ public class velocityReader{
     static FileReader fileReader;
     static BufferedReader bufferedReader;
     static String line, valueY, valueX;
-    static ArrayList<String> xList;
-    static ArrayList<String> yList;
+    public static ArrayList<String> xList;
+    public static ArrayList<String> yList;
     static String[] arrayX, arrayY; //this is the returned array with all the values in their positions
     static double[][] velArray;
     static String[][] velStringArr;
@@ -17,11 +17,7 @@ public class velocityReader{
     static double valueTemp;
 
     public static void main(String[] args) {
-
             //in the folllowing lines all the variables will be filled with the correspondant array values
-            getValues("trials.txt");
-
-
     }
     public static double[][] getValues(String file) {
         
@@ -30,16 +26,17 @@ public class velocityReader{
         yList = new ArrayList<>();
 
         try{
+            file = "trails.txt";
             f = new File(file);
             fileReader = new FileReader(f);
             bufferedReader = new BufferedReader(fileReader);
 
             while((line = bufferedReader.readLine()) != null){
-                valueY = line.substring(line.lastIndexOf(" ") + 1); //it takes all the values after the last space
+                String[] parts = line.split(",");
+                valueY = parts[1];
+                valueX = parts[0];
+                xList.add(valueX);
                 yList.add(valueY);
-
-                String[] parts = line.split("\\,");
-                valueY = parts[0];
                 count++;
             }
             velArray = new double[count][count];

@@ -3,11 +3,13 @@ import java.io.FileNotFoundException;
 public class Main implements Runnable{
     public static boolean run = false;
     public static int count = 1;
+    public static int c = 0;
     public static Thread t;
     public static Object LOCK = new Object();
     public static Object LOCK2 = new Object();
     public static double xV = 0.0;
     public static double yV = 0.0;
+    public static double Velocities[][];
     public static void main(String[] args) throws FileNotFoundException  {
         config();
         //PhysicsEngine.EulersMethod(0.01, 0, 0, 2, 0, 0.056, 0.05);
@@ -15,23 +17,44 @@ public class Main implements Runnable{
         t.start();
         synchronized (LOCK2) {
         while (true) {
-                try { LOCK2.wait(); }
+                try { 
+                    c = 0;
+                    run = false;
+                    LOCK2.wait();
+                 }
                 catch (InterruptedException e) {
+                    
                     // treat interrupt as exit request
                 }
-            
-                unlock();
-                PhysicsEngine.SemiImplicitEulerMethod(0.01, Ball.X, Ball.Y, xV, yV, 0.056);
+                if (c > 0) {
+                    unlock();
+                    for (int i = 0; i < c; i++) {
+                        Main.xV = Main.Velocities[0][i];
+                        Main.yV = Main.Velocities[1][i];
+                        
+                        PhysicsEngine.SemiImplicitEulerMethod(0.01, Ball.X, Ball.Y, xV, yV, 0.056);
+                        checkIfHitTarget(Ball.X, Ball.Y);
+
+                        }
+                    run = false;
+                         
+                }
+                else{
+                    unlock();
+                    PhysicsEngine.SemiImplicitEulerMethod(0.01, Ball.X, Ball.Y, xV, yV, 0.056);
+                    checkIfHitTarget(Ball.X, Ball.Y);
+                    run = false;
+                }
+
                 
-            
-            count++;
-            count--;
+
         }
     }
         
 
     }  
     public static void config() throws FileNotFoundException{
+        Velocities = velocityReader.getValues("trails.txt");
         inputReader.initValues("example_inputfile.txt");
         Parse.Parser(inputReader.heightProfile);
         if(mathFunction.CheckSand(inputReader.x0, inputReader.y0)){
@@ -44,9 +67,17 @@ public class Main implements Runnable{
         }
         Ball.X = inputReader.x0;
         Ball.Y = inputReader.y0;
+        Ball.prevX = inputReader.x0;
+        Ball.prevY = inputReader.y0;
         
     }
+    public static void checkIfHitTarget(double x, double y){
+        if (Math.pow((x-inputReader.xt), 2)+Math.pow((y-inputReader.yt), 2) <= Math.pow(inputReader.r, 2) ) {
+            System.out.println("you won");
+        }
+    }
     public static void unlock(){
+        run = true;
         synchronized (LOCK) {
             LOCK.notifyAll();
         }
@@ -67,7 +98,7 @@ public class Main implements Runnable{
             catch (InterruptedException e) {
                 // treat interrupt as exit request
             }
-            while(!(golfApp.golfing == null)){
+            while(run){
                 golfApp.golfing.UpdateBall((int)(Ball.X * 100), (int)(Ball.Y * 100));
                 try {
                     Thread.sleep(10);

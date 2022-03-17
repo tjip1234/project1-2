@@ -17,8 +17,8 @@ public class ImageFile
     public static int width;
     public static String imagename ()  
     {
-        width = 1 + (int)(Math.abs(inputReader.xt-inputReader.x0)*100)*2;
-        height = 1 + (int)(Math.abs(inputReader.yt-inputReader.y0)*100)*2;
+        width = 120 + (int)((Math.abs(inputReader.xt)-Math.abs(inputReader.x0))*100)*2;
+        height = 120 + (int)((Math.abs(inputReader.yt)-Math.abs(inputReader.y0))*100)*2;
         // Constructs a BufferedImage of one of the predefined image types.
         BufferedImage canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         //ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -41,14 +41,17 @@ public class ImageFile
             for (int j=0; j<canvas.getHeight(); j++)
             {
                 double n = (mathFunction.Function(i, j)*3.5); 
-                if (mathFunction.Function(i/100.0,j/100.0) < 0) {
+                if (mathFunction.Function(i,j) < 0) {
                     canvas.setRGB(i,j,new Color(0,0,254).getRGB()); 
                 }
-                else if (mathFunction.CheckSand( (((double)i)-width/2.0)/100.0, (((double)j)-height/2.0)/100.0)) {
+                else if (mathFunction.CheckSand( (((double)i)-width/2.0)/100.0, -(((double)j) - height/2.0)/100.0)) {
                     canvas.setRGB(i,j,new Color(127,127,0).getRGB());
                 }
+                else if(Math.pow(((((double)i)-width/2.0)/100.0-inputReader.tree1.X), 2)+Math.pow((-(((double)j) - height/2.0)/100.0)-inputReader.tree1.Y, 2) <= Math.pow(inputReader.tree1.R, 2)){
+                    canvas.setRGB(i,j,new Color(20,20,0).getRGB());
+                }
                 else{
-                    canvas.setRGB(i,j,new Color(0,(int)((n/n_biggest)*250.0),0).getRGB());
+                    canvas.setRGB(i,j,new Color(0,(int)((n/n_biggest)*240.0),0).getRGB());
                 }
             }
         }

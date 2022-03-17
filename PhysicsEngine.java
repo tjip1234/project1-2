@@ -76,7 +76,7 @@ class PhysicsEngine{
             X += stepsize *velocityX;
             Y += stepsize *velocityY;
             //System.out.println(derivativeCalculator(X, Y));
-            System.out.println(X + " " + Y + " " + velocityX + " " + velocityY );
+            
             if(mathFunction.CheckSand(X, Y)){
                 friction = inputReader.mus;
                 StaticFriction = inputReader.musS;
@@ -85,18 +85,29 @@ class PhysicsEngine{
                 friction = inputReader.muk;
                 StaticFriction = inputReader.mukS;
             }
+            System.out.println(X + " " + Y + " " + velocityX + " " + velocityY + " " + friction + " " + StaticFriction);
 
             //TODO fix this
-            if (X < inputReader.tree1.X + inputReader.tree1.R && X > inputReader.tree1.X - inputReader.tree1.R && Y < inputReader.tree1.Y + inputReader.tree1.R && Y > inputReader.tree1.Y - inputReader.tree1.R) {
+            if (Math.pow((X-inputReader.tree1.X), 2)+Math.pow((Y-inputReader.tree1.Y), 2) <= Math.pow(inputReader.tree1.R, 2)) {
                 Ball.X = Ball.prevX;
                 Ball.Y = Ball.prevY;
                 Ball.Z = Ball.prevZ;
+                try {
+                    Thread.sleep(20);
+                } catch (Exception e) {
+                    //TODO: handle exception
+                }
                 return;
             }
             if (mathFunction.Function(X,Y) < 0) {
                 Ball.X = Ball.prevX;
                 Ball.Y = Ball.prevY;
                 Ball.Z = Ball.prevZ;
+                try {
+                    Thread.sleep(20);
+                } catch (Exception e) {
+                    //TODO: handle exception
+                }
                 return;
             }
             if (Stop(velocityX, velocityY)) {
@@ -104,6 +115,11 @@ class PhysicsEngine{
                     X = (x+X)/2;
                     Y = (y+Y)/2;
                     System.out.println(X + " " + Y + " " + velocityX + " " + velocityY );
+                    try {
+                        Thread.sleep(20);
+                    } catch (Exception e) {
+                        //TODO: handle exception
+                    }
                     return;
                 }
             }
@@ -172,10 +188,10 @@ class PhysicsEngine{
         return -gravityThing-(velocityThing*frictionThing);
     }
     public static boolean StopComplete(double X, double Y, double staticfriction){
-        if((derivativeOf(X,Y,inputReader.heightProfile,'x') ==  0) && (derivativeOf(X,Y,inputReader.heightProfile,'y') == 0) || (Math.abs(derivativeCalculator(X, Y))  - epsilon < 0) && (Math.abs(derivativeCalculator(Y, X)) - epsilon < 0 )){ // range
+        if((derivativeOf(X,Y,inputReader.heightProfile,'x') ==  0) && (derivativeOf(X,Y,inputReader.heightProfile,'y') == 0) || (Math.abs(derivativeOf(X,Y,inputReader.heightProfile,'x'))  - epsilon < 0) && Math.abs(derivativeOf(X,Y,inputReader.heightProfile,'y')) - epsilon < 0 ){ // range
             return true;
         }
-        else if(derivativeOf(X,Y,inputReader.heightProfile,'x') == 0 || derivativeOf(X,Y,inputReader.heightProfile,'y') == 0 || (Math.abs(derivativeCalculator(X, Y))  - epsilon < 0) || (Math.abs(derivativeCalculator(Y, X)) - epsilon < 0 )){ 
+        else if(derivativeOf(X,Y,inputReader.heightProfile,'x') == 0 || derivativeOf(X,Y,inputReader.heightProfile,'y') == 0 || (Math.abs(derivativeOf(X,Y,inputReader.heightProfile,'x'))  - epsilon < 0) || (Math.abs(derivativeOf(X,Y,inputReader.heightProfile,'y')) - epsilon < 0 )){ 
             if(staticfriction > Math.sqrt(Math.pow(derivativeOf(X,Y,inputReader.heightProfile,'x'), 2) + Math.pow(derivativeOf(X,Y,inputReader.heightProfile,'y'), 2))){
                 return true;
             }
