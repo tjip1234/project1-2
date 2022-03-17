@@ -1,5 +1,6 @@
 public class RKutta {
     //not sure if 100% good
+    /*
     public static void RKuttaMethod(double stepsize, double X, double Y, double velocityX, double velocityY, double mass, double friction){
             
         double x = X;
@@ -29,4 +30,5 @@ public class RKutta {
         }
         RKuttaMethod(stepsize, X,Y,velocityX,velocityY,mass,friction);
     }
+    */
 }

@@ -8,6 +8,8 @@ class PhysicsEngine{
     public static int count = 0;
     public static double epsilon = 0.1;
     public static double epsilon2 = 0.015;
+    public static double friction = 0.1;
+    public static double stepsize = 0.01;
 
     public static void EulersMethod(double stepsize, double X, double Y, double velocityX, double velocityY, double mass, double friction){
             double x = X;
@@ -25,6 +27,9 @@ class PhysicsEngine{
             Ball.Z = mathFunction.Function(X, Y);
             //double slope = (Y-y)/(X-x);
             //double intercept = y - slope * x;
+            Ball.X = X;
+            Ball.Y = Y;
+            golfApp.golfing.UpdateBall((int)(Ball.X * 100),(int)(Ball.Y * 100));
             if(mathFunction.CheckSand(X, Y)){
                 friction = inputReader.mus;
                 StaticFriction = inputReader.musS;
@@ -60,7 +65,7 @@ class PhysicsEngine{
             }
             EulersMethod(stepsize, X,Y,velocityX,velocityY,mass,friction);
         }
-    public static void SemiImplicitEulerMethod(double stepsize, double X, double Y, double velocityX, double velocityY, double mass, double friction){
+    public static void SemiImplicitEulerMethod(double stepsize, double X, double Y, double velocityX, double velocityY, double mass){
             
             double x = X;
             double y = Y;
@@ -80,6 +85,7 @@ class PhysicsEngine{
                 friction = inputReader.muk;
                 StaticFriction = inputReader.mukS;
             }
+
             //TODO fix this
             if (X < inputReader.tree1.X + inputReader.tree1.R && X > inputReader.tree1.X - inputReader.tree1.R && Y < inputReader.tree1.Y + inputReader.tree1.R && Y > inputReader.tree1.Y - inputReader.tree1.R) {
                 Ball.X = Ball.prevX;
@@ -101,7 +107,11 @@ class PhysicsEngine{
                     return;
                 }
             }
-            SemiImplicitEulerMethod(stepsize, X,Y,velocityX,velocityY,mass,friction);
+            Ball.X = X;
+            Ball.Y = Y;
+            //golfApp.golfing.UpdateBall((int)(Ball.X * 100),(int)(Ball.Y * 100));
+
+            SemiImplicitEulerMethod(stepsize, X,Y,velocityX,velocityY,mass);
         }
 
         /**
