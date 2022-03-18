@@ -160,11 +160,13 @@ public class golfApp extends JFrame implements ActionListener
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(startButton)) {
             this.dispose();
-            golfing = new golfApp2();
+            new golfApp3();
+            
             
         }
         else if(e.getSource().equals(configButton)){
             this.dispose();
+            System.exit(0);
         }
     }
 

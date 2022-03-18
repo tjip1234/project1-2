@@ -30,7 +30,7 @@ public class ImageFile
         {
             for (int j=0; j<canvas.getHeight(); j++)
             {
-                double n = (mathFunction.Function(i, j)*3.5); 
+                double n = (mathFunction.Function( (((double)i)-width/2.0)/100.0, -(((double)j) - height/2.0)/100.0)); 
                 if( n > n_biggest){
                     n_biggest = n;
                 }
@@ -40,8 +40,8 @@ public class ImageFile
         {
             for (int j=0; j<canvas.getHeight(); j++)
             {
-                double n = (mathFunction.Function(i, j)*3.5); 
-                if (mathFunction.Function(i,j) < 0) {
+                double n = (mathFunction.Function( (((double)i)-width/2.0)/100.0, -(((double)j) - height/2.0)/100.0)); 
+                if (mathFunction.Function( (((double)i)-width/2.0)/100.0, -(((double)j) - height/2.0)/100.0) < 0) {
                     canvas.setRGB(i,j,new Color(0,0,254).getRGB()); 
                 }
                 else if (mathFunction.CheckSand( (((double)i)-width/2.0)/100.0, -(((double)j) - height/2.0)/100.0)) {

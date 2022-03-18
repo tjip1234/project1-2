@@ -13,8 +13,8 @@ import java.awt.geom.Point2D;
 public class golfApp2 implements ActionListener
 {
     //void invoke(goldFile);
-    int xPos = 0;
-    int yPos = 0;
+    static int xPos = 0;
+    static int yPos = 0;
     private int str_control;
     private int drc_control;
     public static double xPosition = 10;
@@ -24,9 +24,9 @@ public class golfApp2 implements ActionListener
     public static Line2D.Double line = new Line2D.Double(p,p2);
     Icon hit = new ImageIcon("res/button.png");
     Icon stop = new ImageIcon("res/stop.png");
-    Icon file = new ImageIcon("res/stop.png");
+    Icon file = new ImageIcon("res/file.png");
     Image flag = Toolkit.getDefaultToolkit().getImage("res/golf_flag.png");
-    Image east = Toolkit.getDefaultToolkit().getImage("res/East.png");
+    //Image east = Toolkit.getDefaultToolkit().getImage("res/East.png");
     Image ball = Toolkit.getDefaultToolkit().getImage("res/golfball.png");
     Image compass = Toolkit.getDefaultToolkit().getImage("res/compass.png");
     //Component east = Toolkit.getDefaultToolkit().getImage("/Users/vantsevvictor/Downloads/Project 1-2/Golf/res/East.png");
@@ -42,13 +42,14 @@ public class golfApp2 implements ActionListener
     JButton hitFromFile = new JButton(file);
     JLabel buttonname = new JLabel("HIT");
     JLabel stopname = new JLabel("STOP");
+    JLabel filename = new JLabel("FILE");
     JLabel strength = new JLabel("Strength: ");
     JLabel direction = new JLabel("Direction: ");
-    JLabel eastarr = new JLabel("--->");
+    //JLabel eastarr = new JLabel("--->");
     JLabel ballable = new JLabel(new ImageIcon(ball));
     JLabel complable = new JLabel(new ImageIcon(compass));
     JLabel fieldy = new JLabel(new ImageIcon(field));
-    JLabel eastarrow = new JLabel(new ImageIcon(east));
+    //JLabel eastarrow = new JLabel(new ImageIcon(east));
     JLabel flagend = new JLabel(new ImageIcon(flag));
     Border border = BorderFactory.createLineBorder(new Color(0,0,0), 4);
     Border porder = BorderFactory.createLineBorder(new Color(0,0,0), 1); 
@@ -56,6 +57,44 @@ public class golfApp2 implements ActionListener
     public int a;
     public int b;
     Double HitStrength = 0.0;
+    public static String magic = String.valueOf((int)(ImageFile.width/2 + Ball.X*100));
+    public static String magic2 = String.valueOf((int)(ImageFile.height/2 - Ball.Y*100));
+    JLabel xCoordinate = new JLabel("xCoordinate: " + magic);
+    JLabel yCoordinate = new JLabel("yCoordinate: "+ magic2);
+
+    //east
+    Image east = Toolkit.getDefaultToolkit().getImage("res/East.png");
+    JLabel eastarr = new JLabel(new ImageIcon(east));
+    
+    //nordest
+    Image ne = Toolkit.getDefaultToolkit().getImage("res/NE.png");
+    JLabel nearr = new JLabel(new ImageIcon(ne));
+
+    //nord
+    Image nord = Toolkit.getDefaultToolkit().getImage("res/Nord.png");
+    JLabel  nordarr= new JLabel(new ImageIcon(nord));
+
+    //nordwest
+    Image nw = Toolkit.getDefaultToolkit().getImage("res/NW.png");
+    JLabel  nwarr= new JLabel(new ImageIcon(nw));
+
+    //west
+    Image west = Toolkit.getDefaultToolkit().getImage("res/west.png");
+    JLabel westarr = new JLabel(new ImageIcon(west));
+
+    //sw
+    Image sw = Toolkit.getDefaultToolkit().getImage("res/SW.png");
+    JLabel swarr = new JLabel(new ImageIcon(sw));
+
+    //south
+    Image south = Toolkit.getDefaultToolkit().getImage("res/South.png");
+    JLabel southarr = new JLabel(new ImageIcon(south));
+
+    //se
+    Image se = Toolkit.getDefaultToolkit().getImage("res/SE.png");
+    JLabel searr = new JLabel(new ImageIcon(se));
+
+
     public golfApp2()
     {
         //Frame
@@ -155,7 +194,7 @@ public class golfApp2 implements ActionListener
             }
         );
         hitButton.addActionListener(this);
-        hitButton.setBounds(508, 6, 60, 60);
+        hitButton.setBounds(508, 16, 60, 60);
 
         //Button
         stopButton.setBorder(border);
@@ -195,7 +234,7 @@ public class golfApp2 implements ActionListener
             }
         );
         stopButton.addActionListener(this);
-        stopButton.setBounds(592, 6, 60, 60);
+        stopButton.setBounds(592, 16, 60, 60);
         
         hitFromFile.setBorder(border);
         hitFromFile.setBackground(new Color(200,200,200));
@@ -234,9 +273,9 @@ public class golfApp2 implements ActionListener
             }
         );
         hitFromFile.addActionListener(this);
-        hitFromFile.setBounds(660, 6, 60, 60);
+        hitFromFile.setBounds(675, 16, 60, 60);
         //Arrows
-        eastarrow.setBounds(50, 50, 300, 300);
+        //eastarrow.setBounds(50, 50, 300, 300);
         
         //Slider
         slider_strength.addChangeListener(new ChangeListener() 
@@ -257,18 +296,159 @@ public class golfApp2 implements ActionListener
                 drc_control=((JSlider)e.getSource()).getValue();
                 Main.xV = Math.cos(drc_control  * (Math.PI/180))*HitStrength;
                 Main.yV = Math.sin(drc_control * (Math.PI/180))*HitStrength;
+
+                slider_direction.addChangeListener(new ChangeListener() 
+        {
+            public void stateChanged(ChangeEvent e) 
+            {
+                drc_control=((JSlider)e.getSource()).getValue();
+                if (drc_control==0)
+                {
+                    eastarr.setBounds((int)(ImageFile.width/2 + Ball.X*100)+15, (int)(ImageFile.height/2 - Ball.Y*100)-25, 110, 100);
+                    nearr.setBounds(0, 0, 0, 0);
+                    nordarr.setBounds(0, 0, 0, 0);
+                    nwarr.setBounds(0, 0, 0, 0);
+                    westarr.setBounds(0, 0, 0, 0);
+                    swarr.setBounds(0, 0, 0, 0);
+                    southarr.setBounds(0, 0, 0, 0);
+                    searr.setBounds(0, 0, 0, 0);
+                }
+                else if (drc_control==45)
+                {
+                    eastarr.setBounds(0, 0, 0, 0);
+                    nearr.setBounds((int)(ImageFile.width/2 + Ball.X*100)+10, (int)(ImageFile.height/2 - Ball.Y*100)-60, 110, 100);
+                    nordarr.setBounds(0, 0, 0, 0);
+                    nwarr.setBounds(0, 0, 0, 0);
+                    westarr.setBounds(0, 0, 0, 0);
+                    swarr.setBounds(0, 0, 0, 0);
+                    southarr.setBounds(0, 0, 0, 0);
+                    searr.setBounds(0, 0, 0, 0);
+                    //paintComponent();
+                }
+                else if (drc_control==90)
+                {
+                    eastarr.setBounds(0, 0, 0, 0);
+                    nearr.setBounds(0, 0, 0, 0);
+                    nordarr.setBounds((int)(ImageFile.width/2 + Ball.X*100)-30, (int)(ImageFile.height/2 - Ball.Y*100)-70, 110, 100);
+                    nwarr.setBounds(0, 0, 0, 0);
+                    westarr.setBounds(0, 0, 0, 0);
+                    swarr.setBounds(0, 0, 0, 0);
+                    southarr.setBounds(0, 0, 0, 0);
+                    searr.setBounds(0, 0, 0, 0);
+                    //paintComponent();
+                }
+
+                else if (drc_control==135)
+                {
+                    eastarr.setBounds(0, 0, 0, 0);
+                    nearr.setBounds(0, 0, 0, 0);
+                    nordarr.setBounds(0, 0, 0, 0);
+                    nwarr.setBounds((int)(ImageFile.width/2 + Ball.X*100)-70, (int)(ImageFile.height/2 - Ball.Y*100)-60, 110, 100);
+                    westarr.setBounds(0, 0, 0, 0);
+                    swarr.setBounds(0, 0, 0, 0);
+                    southarr.setBounds(0, 0, 0, 0);
+                    searr.setBounds(0, 0, 0, 0);
+                    //paintComponent();
+                }
+
+                else if (drc_control==180)
+                {
+                    eastarr.setBounds(0, 0, 0, 0);
+                    nearr.setBounds(0, 0, 0, 0);
+                    nordarr.setBounds(0, 0, 0, 0);
+                    nwarr.setBounds(0, 0, 0, 0);
+                    westarr.setBounds((int)(ImageFile.width/2 + Ball.X*100)-80, (int)(ImageFile.height/2 - Ball.Y*100)-25, 110, 100);
+                    swarr.setBounds(0, 0, 0, 0);
+                    southarr.setBounds(0, 0, 0, 0);
+                    searr.setBounds(0, 0, 0, 0);
+                    //paintComponent();
+                }
+
+                else if (drc_control==225)
+                {
+                    eastarr.setBounds(0, 0, 0, 0);
+                    nearr.setBounds(0, 0, 0, 0);
+                    nordarr.setBounds(0, 0, 0, 0);
+                    nwarr.setBounds(0, 0, 0, 0);
+                    westarr.setBounds(0, 0, 0, 0);
+                    swarr.setBounds((int)(ImageFile.width/2 + Ball.X*100)-70, (int)(ImageFile.height/2 - Ball.Y*100)+10, 110, 100);
+                    southarr.setBounds(0, 0, 0, 0);
+                    searr.setBounds(0, 0, 0, 0);
+                    //paintComponent();
+                }
+
+                else if (drc_control==270)
+                {
+                    eastarr.setBounds(0, 0, 0, 0);
+                    nearr.setBounds(0, 0, 0, 0);
+                    nordarr.setBounds(0, 0, 0, 0);
+                    nwarr.setBounds(0, 0, 0, 0);
+                    westarr.setBounds(0, 0, 0, 0);
+                    swarr.setBounds(0, 0, 0, 0);
+                    southarr.setBounds((int)(ImageFile.width/2 + Ball.X*100)-30, (int)(ImageFile.height/2 - Ball.Y*100)+20, 110, 100);
+                    searr.setBounds(0, 0, 0, 0);
+                    //paintComponent();
+                }
+
+                else if (drc_control==315)
+                {
+                    eastarr.setBounds(0, 0, 0, 0);
+                    nearr.setBounds(0, 0, 0, 0);
+                    nordarr.setBounds(0, 0, 0, 0);
+                    nwarr.setBounds(0, 0, 0, 0);
+                    westarr.setBounds(0, 0, 0, 0);
+                    swarr.setBounds(0, 0, 0, 0);
+                    southarr.setBounds(0, 0, 0, 0);
+                    searr.setBounds((int)(ImageFile.width/2 + Ball.X*100)+5, (int)(ImageFile.height/2 - Ball.Y*100)+5, 110, 100);
+                    //paintComponent();
+                }
+
+                else if (drc_control==360)
+                {
+                    eastarr.setBounds((int)(ImageFile.width/2 + Ball.X*100)+15, (int)(ImageFile.height/2 - Ball.Y*100)-25, 110, 100);
+                    nearr.setBounds(0, 0, 0, 0);
+                    nordarr.setBounds(0, 0, 0, 0);
+                    nwarr.setBounds(0, 0, 0, 0);
+                    westarr.setBounds(0, 0, 0, 0);
+                    swarr.setBounds(0, 0, 0, 0);
+                    southarr.setBounds(0, 0, 0, 0);
+                    searr.setBounds(0, 0, 0, 0);
+                    //paintComponent();
+                }
+
+                        
+            }
+        });
+
+
+
             }
         });
 
         //Label 
         buttonname.setFont(new Font("Arial", Font.PLAIN, 20));
         buttonname.setForeground(new Color(0,0,0));
-        buttonname.setBounds(522, 50, 60, 60);
+        buttonname.setBounds(522, 60, 60, 60);
 
         //Label 
         stopname.setFont(new Font("Arial", Font.PLAIN, 20));
         stopname.setForeground(new Color(0,0,0));
-        stopname.setBounds(596, 50, 110, 60);
+        stopname.setBounds(596, 60, 110, 60);
+
+        //Label 
+        filename.setFont(new Font("Arial", Font.PLAIN, 20));
+        filename.setForeground(new Color(0,0,0));
+        filename.setBounds(686, 60, 110, 60);
+
+        //Label 
+        xCoordinate.setFont(new Font("Arial", Font.PLAIN, 20));
+        xCoordinate.setForeground(new Color(0,0,0));
+        xCoordinate.setBounds(760, 15, 200, 60);
+
+        //Label 
+        yCoordinate.setFont(new Font("Arial", Font.PLAIN, 20));
+        yCoordinate.setForeground(new Color(0,0,0));
+        yCoordinate.setBounds(760, 40, 200, 60);
 
         //Label 
         strength.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -281,9 +461,9 @@ public class golfApp2 implements ActionListener
         direction.setBounds(30, 33, 110, 60);
 
         //Label 
-        eastarr.setFont(new Font("Arial", Font.PLAIN, 20));
-        eastarr.setForeground(new Color(0,0,0));
-        eastarr.setBounds(40, 40, 110, 100);
+        // eastarr.setFont(new Font("Arial", Font.PLAIN, 20));
+        // eastarr.setForeground(new Color(0,0,0));
+        // eastarr.setBounds(40, 40, 110, 100);
         
         //Label 
         ballable.setBounds((int)(ImageFile.width/2 + Ball.X*100),(int)(ImageFile.height/2 - Ball.Y*100),50, 50);
@@ -291,8 +471,19 @@ public class golfApp2 implements ActionListener
         slider_strength.setBounds(130, 4, 350, 50);
         slider_direction.setBounds(130, 47, 350, 50);
 
+        panel_1.add(eastarr);
+        panel_1.add(nearr);
+        panel_1.add(nordarr);
+        panel_1.add(nwarr);
+        panel_1.add(westarr);
+        panel_1.add(swarr);
+        panel_1.add(southarr);
+        panel_1.add(searr);
+
+
+
         fieldy.setBounds(0, 0, 750+(ImageFile.width-750), ImageFile.height);
-        flagend.setBounds((int)(ImageFile.width/2 + inputReader.xt*100), (int)(ImageFile.height/2 - inputReader.yt*100), 60, 70);
+        flagend.setBounds((int)(ImageFile.width/2 + inputReader.xt*100), (int)(ImageFile.height/2 - inputReader.yt*100), 60, 80);
         panel_1.add(flagend);
         panel_1.add(ballable);
         panel_1.add(complable);
@@ -306,6 +497,9 @@ public class golfApp2 implements ActionListener
         panel_2.add(slider_direction);
         panel_2.add(strength);
         panel_2.add(direction);
+        panel_2.add(xCoordinate);
+        panel_2.add(yCoordinate);
+        panel_2.add(filename);
         frame.add(panel_1);
         frame.add(panel_2);
         frame.setVisible(true);
@@ -314,6 +508,10 @@ public class golfApp2 implements ActionListener
 
     public void UpdateBall(int xPos, int yPos){
         ballable.setBounds(ImageFile.width/2 + xPos, ImageFile.height/2 - yPos, 50, 50);
+        magic = String.valueOf(Ball.X);
+        magic2 = String.valueOf(Ball.Y);
+        xCoordinate.setText("X: " + magic);
+        yCoordinate.setText("Y: " + magic2);
         System.out.println("update");
         frame.setVisible(true);
     }
@@ -322,6 +520,15 @@ public class golfApp2 implements ActionListener
         if (e.getSource().equals(hitButton)) 
         {
             Main.unlock2();
+            eastarr.setBounds(0,0,0,0);
+            nearr.setBounds(0, 0, 0, 0);
+            nordarr.setBounds(0, 0, 0, 0);
+            nwarr.setBounds(0, 0, 0, 0);
+            westarr.setBounds(0, 0, 0, 0);
+            swarr.setBounds(0, 0, 0, 0);
+            southarr.setBounds(0, 0, 0, 0);
+            searr.setBounds(0, 0, 0, 0);
+
         }
         else if (e.getSource().equals(stopButton)) 
         {
@@ -348,12 +555,12 @@ public class golfApp2 implements ActionListener
         yPosition += y;
     }
 
-    public static void draw(Graphics2D g2)
-    {
-        Color b = new Color(51,153,255);
-        g2.setStroke(new BasicStroke(5));
-        g2.setColor(Color.RED);
-        g2.draw(line);
-    }
+    // public static void draw(Graphics2D g2)
+    // {
+    //     Color b = new Color(51,153,255);
+    //     g2.setStroke(new BasicStroke(5));
+    //     g2.setColor(Color.RED);
+    //     g2.draw(line);
+    // }
 
 }

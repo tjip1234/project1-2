@@ -39,7 +39,7 @@ public class velocityReader{
                 yList.add(valueY);
                 count++;
             }
-            velArray = new double[count][count];
+            velArray = new double[2][count];
             arrayX = xList.toArray(new String[0]); // converts from arraylist to array, it will return an array
             arrayY = yList.toArray(new String[0]); // converts from arraylist to array, it will return an array
             

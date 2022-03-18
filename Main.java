@@ -1,6 +1,7 @@
 import java.io.FileNotFoundException;
 
 public class Main implements Runnable{
+    public static int EngineChoice = 0;
     public static boolean run = false;
     public static int count = 1;
     public static int c = 0;
@@ -32,7 +33,7 @@ public class Main implements Runnable{
                         Main.xV = Main.Velocities[0][i];
                         Main.yV = Main.Velocities[1][i];
                         
-                        PhysicsEngine.SemiImplicitEulerMethod(0.01, Ball.X, Ball.Y, xV, yV, 0.056);
+                        Engine();
                         checkIfHitTarget(Ball.X, Ball.Y);
 
                         }
@@ -41,7 +42,7 @@ public class Main implements Runnable{
                 }
                 else{
                     unlock();
-                    PhysicsEngine.SemiImplicitEulerMethod(0.01, Ball.X, Ball.Y, xV, yV, 0.056);
+                    Engine();
                     checkIfHitTarget(Ball.X, Ball.Y);
                     run = false;
                 }
@@ -51,8 +52,26 @@ public class Main implements Runnable{
         }
     }
         
-
     }  
+    public static void Engine(){
+        switch (EngineChoice) {
+            case 0:
+            PhysicsEngine.EulersMethod(0.01, Ball.X, Ball.Y, xV, yV, 0.056);
+                break;
+            case 1:
+            PhysicsEngine.SemiImplicitEulerMethod(0.01, Ball.X, Ball.Y, xV, yV, 0.056);
+                break;
+            case 2:
+            PhysicsEngine.rungeKutta4(0.005, Ball.X, Ball.Y, xV, yV);
+                break;
+            case 3:
+            PhysicsEngine.rungeKutta2(0.005, Ball.X, Ball.Y, xV, yV);   
+                break;
+            default:
+            PhysicsEngine.SemiImplicitEulerMethod(0.01, Ball.X, Ball.Y, xV, yV, 0.056);
+                break;
+        }
+    }
     public static void config() throws FileNotFoundException{
         Velocities = velocityReader.getValues("trails.txt");
         inputReader.initValues("example_inputfile.txt");
@@ -99,7 +118,7 @@ public class Main implements Runnable{
                 // treat interrupt as exit request
             }
             while(run){
-                golfApp.golfing.UpdateBall((int)(Ball.X * 100), (int)(Ball.Y * 100));
+                golfApp3.golfing.UpdateBall((int)(Ball.X * 100), (int)(Ball.Y * 100));
                 try {
                     Thread.sleep(10);
                 } catch (Exception e) {

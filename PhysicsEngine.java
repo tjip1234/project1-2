@@ -9,9 +9,10 @@ class PhysicsEngine{
     public static double epsilon = 0.1;
     public static double epsilon2 = 0.015;
     public static double friction = 0.1;
-    public static double stepsize = 0.01;
+    //public static double stepsize = 0.01;
+    public static double mass = 0.056;
 
-    public static void EulersMethod(double stepsize, double X, double Y, double velocityX, double velocityY, double mass, double friction){
+    public static void EulersMethod(double stepsize, double X, double Y, double velocityX, double velocityY, double mass){
             double x = X;
             double y = Y;
             double vx = velocityX;
@@ -29,7 +30,6 @@ class PhysicsEngine{
             //double intercept = y - slope * x;
             Ball.X = X;
             Ball.Y = Y;
-            golfApp.golfing.UpdateBall((int)(Ball.X * 100),(int)(Ball.Y * 100));
             if(mathFunction.CheckSand(X, Y)){
                 friction = inputReader.mus;
                 StaticFriction = inputReader.musS;
@@ -38,32 +38,45 @@ class PhysicsEngine{
                 friction = inputReader.muk;
                 StaticFriction = inputReader.mukS;
             }
-            //TODO fix this
-            if (X < inputReader.tree1.X + inputReader.tree1.R && X > inputReader.tree1.X - inputReader.tree1.R && Y < inputReader.tree1.Y + inputReader.tree1.R && Y > inputReader.tree1.Y - inputReader.tree1.R) {
+            System.out.println(X + " " + Y + " " + velocityX + " " + velocityY + " " + friction + " " + StaticFriction);
+            if (Math.pow((X-inputReader.tree1.X), 2)+Math.pow((Y-inputReader.tree1.Y), 2) <= Math.pow(inputReader.tree1.R, 2)) {
                 Ball.X = Ball.prevX;
                 Ball.Y = Ball.prevY;
                 Ball.Z = Ball.prevZ;
+                try {
+                    Thread.sleep(20);
+                } catch (Exception e) {
+                    //TODO: handle exception
+                }
                 return;
             }
             if (mathFunction.Function(X,Y) < 0) {
                 Ball.X = Ball.prevX;
                 Ball.Y = Ball.prevY;
                 Ball.Z = Ball.prevZ;
+                try {
+                    Thread.sleep(20);
+                } catch (Exception e) {
+                    //TODO: handle exception
+                }
                 return;
             }
             if (Stop(velocityX, velocityY)) {
                 if (StopComplete(X, Y, StaticFriction)) {
                     X = (x+X)/2;
                     Y = (y+Y)/2;
-                    Ball.prevX = X;
-                    Ball.prevY = Y;
-                    Ball.prevZ = mathFunction.Function(X, Y);
                     System.out.println(X + " " + Y + " " + velocityX + " " + velocityY );
+                    try {
+                        Thread.sleep(20);
+                    } catch (Exception e) {
+                        //TODO: handle exception
+                    }
                     return;
-                    
                 }
             }
-            EulersMethod(stepsize, X,Y,velocityX,velocityY,mass,friction);
+            Ball.X = X;
+            Ball.Y = Y;
+            EulersMethod(stepsize, X,Y,velocityX,velocityY,mass);
         }
     public static void SemiImplicitEulerMethod(double stepsize, double X, double Y, double velocityX, double velocityY, double mass){
             
@@ -86,8 +99,6 @@ class PhysicsEngine{
                 StaticFriction = inputReader.mukS;
             }
             System.out.println(X + " " + Y + " " + velocityX + " " + velocityY + " " + friction + " " + StaticFriction);
-
-            //TODO fix this
             if (Math.pow((X-inputReader.tree1.X), 2)+Math.pow((Y-inputReader.tree1.Y), 2) <= Math.pow(inputReader.tree1.R, 2)) {
                 Ball.X = Ball.prevX;
                 Ball.Y = Ball.prevY;
@@ -140,33 +151,144 @@ class PhysicsEngine{
          * @param friction friction coefficient
          * @return
          */
-
-
-    public static void RKuttaMethod(double stepsize, double X, double Y, double velocityX, double velocityY, double mass, double friction){
-            
+        public static void rungeKutta4(double stepsize, double X, double Y, double velocityx, double velocityy) {
+            while(true){
             double x = X;
             double y = Y;
-            double vx = velocityX;
-            double vy = velocityY;
-            //double k1 = stepsize* beginYCalculator(X, Y, velocityX, velocityY, mass, friction);
-            X += stepsize *velocityX;
-            Y += stepsize *velocityY;
-            velocityX += stepsize * beginXCalculator(x,y,vx,vy,mass,friction );
-            velocityY += stepsize * beginYCalculator(x,y,vx,vy,mass,friction );
-            System.out.println(X + " " + Y + " " + velocityX + " " + velocityY );
-            System.out.println(derivativeCalculator(X, Y));
-            if (Stop(velocityX, velocityY)) {
+            X +=stepsize*velocityx;
+            Y +=stepsize*velocityy;
+            double k1 = stepsize* beginYCalculator(X, Y, velocityx, velocityy, mass, friction);
+            double k2 = stepsize* beginYCalculator(X +(stepsize/2), Y + (k1/2), velocityx, velocityy, mass, friction);
+            double k3 = stepsize* beginYCalculator(X +(stepsize/2), Y +(k2/2), velocityx, velocityy, mass, friction);
+            double k4 = stepsize* beginYCalculator(X +stepsize, Y + k3, velocityx, velocityy, mass, friction);
+            double c1 = stepsize* beginXCalculator(X, Y, velocityx, velocityy, mass, friction);
+            double c2 = stepsize* beginXCalculator(X +(c1/2), Y + (stepsize/2), velocityx, velocityy, mass, friction);
+            double c3 = stepsize* beginXCalculator(X +(c2/2), Y +(stepsize/2), velocityx, velocityy, mass, friction);
+            double c4 = stepsize* beginXCalculator(X + c3, Y + stepsize, velocityx, velocityy, mass, friction);
+            velocityx += ((c1/6) + (c2/3) + (c3/3) + (c4/6));
+            //X +=stepsize*velocityx;
+            
+            
+            //X +=stepsize*velocityx;
+            velocityy += ((k1/6) + (k2/3) + (k3/3) + (k4/6));
+            //Y +=stepsize*velocityy;
+            
+            //Y +=stepsize*velocityy;
+            if(mathFunction.CheckSand(X, Y)){
+                friction = inputReader.mus;
+                StaticFriction = inputReader.musS;
+            }
+            else{ 
+                friction = inputReader.muk;
+                StaticFriction = inputReader.mukS;
+            }
+            System.out.println(X + " " + Y + " " + velocityx + " " + velocityx + " " + friction + " " + StaticFriction);
+            if (Math.pow((X-inputReader.tree1.X), 2)+Math.pow((Y-inputReader.tree1.Y), 2) <= Math.pow(inputReader.tree1.R, 2)) {
+                Ball.X = Ball.prevX;
+                Ball.Y = Ball.prevY;
+                Ball.Z = Ball.prevZ;
+                try {
+                    Thread.sleep(20);
+                } catch (Exception e) {
+                    //TODO: handle exception
+                }
+                return;
+            }
+            if (mathFunction.Function(X,Y) < 0) {
+                Ball.X = Ball.prevX;
+                Ball.Y = Ball.prevY;
+                Ball.Z = Ball.prevZ;
+                try {
+                    Thread.sleep(20);
+                } catch (Exception e) {
+                    //TODO: handle exception
+                }
+                return;
+            }
+            if (Stop(velocityx, velocityy)) {
                 if (StopComplete(X, Y, StaticFriction)) {
                     X = (x+X)/2;
                     Y = (y+Y)/2;
+                    System.out.println(X + " " + Y + " " + velocityx + " " + velocityy );
+                    try {
+                        Thread.sleep(20);
+                    } catch (Exception e) {
+                        //TODO: handle exception
+                    }
                     return;
                 }
             }
-
-    
-            RKuttaMethod(stepsize, X,Y,velocityX,velocityY,mass,friction);
+            Ball.X = X;
+            Ball.Y = Y;
+            rungeKutta4(stepsize,X,Y,velocityx,velocityy);
+            }
         }
-
+        public static void rungeKutta2(double stepsize, double X, double Y, double velocityx, double velocityy) {
+            while(true){
+            double x = X;
+            double y = Y;
+            
+            double k1 = stepsize* beginYCalculator(X, Y, velocityx, velocityy, mass, friction);
+            double k2 = stepsize* beginYCalculator(X +(stepsize/2), Y + (k1/2)*stepsize, velocityx, velocityy, mass, friction);
+            
+            double c1 = stepsize* beginXCalculator(X, Y, velocityx, velocityy, mass, friction);
+            double c2 = stepsize* beginXCalculator(X +(c1/2)*stepsize, Y + (stepsize/2), velocityx, velocityy, mass, friction);
+           
+            X +=stepsize*velocityx;
+            velocityx += (c1/6) + (c2/3);
+            
+            Y +=stepsize*velocityy;
+            velocityy += (k1/6) + (k2/3) ;
+            
+            if(mathFunction.CheckSand(X, Y)){
+                friction = inputReader.mus;
+                StaticFriction = inputReader.musS;
+            }
+            else{ 
+                friction = inputReader.muk;
+                StaticFriction = inputReader.mukS;
+            }
+            System.out.println(X + " " + Y + " " + velocityx + " " + velocityx + " " + friction + " " + StaticFriction);
+            if (Math.pow((X-inputReader.tree1.X), 2)+Math.pow((Y-inputReader.tree1.Y), 2) <= Math.pow(inputReader.tree1.R, 2)) {
+                Ball.X = Ball.prevX;
+                Ball.Y = Ball.prevY;
+                Ball.Z = Ball.prevZ;
+                try {
+                    Thread.sleep(20);
+                } catch (Exception e) {
+                    //TODO: handle exception
+                }
+                return;
+            }
+            if (mathFunction.Function(X,Y) < 0) {
+                Ball.X = Ball.prevX;
+                Ball.Y = Ball.prevY;
+                Ball.Z = Ball.prevZ;
+                try {
+                    Thread.sleep(20);
+                } catch (Exception e) {
+                    //TODO: handle exception
+                }
+                return;
+            }
+            if (Stop(velocityx, velocityy)) {
+                if (StopComplete(X, Y, StaticFriction)) {
+                    X = (x+X)/2;
+                    Y = (y+Y)/2;
+                    System.out.println(X + " " + Y + " " + velocityx + " " + velocityy );
+                    try {
+                        Thread.sleep(20);
+                    } catch (Exception e) {
+                        //TODO: handle exception
+                    }
+                    return;
+                }
+            }
+            Ball.X = X;
+            Ball.Y = Y;
+            rungeKutta4(stepsize,X,Y,velocityx,velocityy);
+            }
+        }
     public static boolean Stop(double X, double Y){
            if(Math.abs(X)-epsilon2<0 && Math.abs(Y)-epsilon2<0){
                 return true;
